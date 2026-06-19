@@ -886,10 +886,12 @@ class Lineage(np.ndarray, metaclass=LineageMeta):
         return LineageView(self)
 
     def __repr__(self) -> str:
-        return f"{super().__repr__()[:-1]},\n  names([{', '.join(self.names)}]))"
+        prefix = f"{type(self).__name__}("
+        body = np.array2string(np.asarray(self), separator=", ", prefix=prefix)
+        return f"{prefix}{body},\n  names([{', '.join(self.names)}]))"
 
     def __str__(self):
-        return f"{super().__str__()}\n names=[{', '.join(self.names)}]"
+        return f"{np.array2string(np.asarray(self))}\n names=[{', '.join(self.names)}]"
 
     @property
     def _fmt(self) -> Callable[[Any], str]:
