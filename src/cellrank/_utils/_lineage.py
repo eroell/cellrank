@@ -886,10 +886,17 @@ class Lineage(np.ndarray, metaclass=LineageMeta):
         return LineageView(self)
 
     def __repr__(self) -> str:
-        return f"{super().__repr__()[:-1]},\n  names([{', '.join(self.names)}]))"
+        # Format a plain ``ndarray`` view of the data rather than ``super().__repr__()``.
+        # Letting numpy format the ``Lineage`` directly makes it index single elements via
+        # ``self[i, j]``, which (because ``Lineage.__getitem__`` never returns a scalar)
+        # yields a ``(1, 1)`` ``Lineage``; converting that to a Python scalar raises
+        # ``TypeError`` on numpy >= 2.4 (it was only a ``DeprecationWarning`` before).
+        prefix = f"{type(self).__name__}("
+        body = np.array2string(np.asarray(self), separator=", ", prefix=prefix)
+        return f"{prefix}{body},\n  names([{', '.join(self.names)}]))"
 
     def __str__(self):
-        return f"{super().__str__()}\n names=[{', '.join(self.names)}]"
+        return f"{np.array2string(np.asarray(self))}\n names=[{', '.join(self.names)}]"
 
     @property
     def _fmt(self) -> Callable[[Any], str]:
