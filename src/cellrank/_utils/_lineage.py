@@ -31,9 +31,9 @@ from cellrank._utils._docs import d, inject_docs
 from cellrank._utils._enum import ModeEnum
 from cellrank._utils._key import Key
 
-try:  # anndata<0.13
+try:  # anndata<0.13.3post0
     from anndata._io.specs.methods import H5Group, ZarrGroup
-except ImportError:  # anndata>=0.13 dropped the aliases and registers the store classes directly
+except ImportError:  # anndata>=0.13.3post0 dropped the aliases and registers the store classes directly
     from h5py import Group as H5Group
     from zarr import Group as ZarrGroup
 
